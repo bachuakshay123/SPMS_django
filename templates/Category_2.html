@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PMS Category</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/style_1.css' %}">
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+window.onload = function () {
+    document.getElementById("sidebar").classList.add("d-none");
+    document.getElementById("mainContent").classList.remove("col-md-10");
+    document.getElementById("mainContent").classList.add("col-md-12");
+};
+
+function toggleSidebar() {
+    let sidebar = document.getElementById("sidebar");
+    let content = document.getElementById("mainContent");
+
+    sidebar.classList.toggle("d-none");
+
+    if (sidebar.classList.contains("d-none")) {
+        content.classList.remove("col-md-10");
+        content.classList.add("col-md-12");
+    } else {
+        content.classList.remove("col-md-12");
+        content.classList.add("col-md-10");
+    }
+}
+</script>
+
+
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3 ">
+    <div class="container-fluid text-white">
+        <button class="btn btn-outline-light me-3"  onclick="toggleSidebar()">
+            <i class="bi bi-list fs-5"></i>
+        </button>
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-car-front-fill fs-3"></i>
+            <h3 class="mb-0">SPMS Panel</h3>
+        </div>
+        <div class="d-flex align-items-center gap-3 ms-auto">
+            <span class="fw-semibold">Welcome, Administrator</span>
+            <a href="{% url 'home' %}" class="btn btn-primary btn-sm px-3">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+<div class="row">
+    
+    <div class="col-md-2 bg-dark text-white min-vh-100 p-0" id="sidebar">
+        <a href="{% url 'dashboard' %}" class="d-block text-white text-decoration-none px-3 py-2">
+            <i class="bi bi-speedometer2 me-2"></i> Dashboard
+        </a>
+        <a href="{% url 'category'%}" class="d-block text-white text-decoration-none px-3 py-2 bg-primary">
+            <i class="bi bi-grid me-2"></i> Category
+        </a>
+        <a href="{% url 'vehicle_entry'%}" class="d-block text-white text-decoration-none px-3 py-2">
+            <i class="bi bi-car-front me-2"></i> Vehicle Entry
+        </a>
+        <a href="{% url 'manage_vehicles'%}" class="d-block text-white text-decoration-none px-3 py-2">
+            <i class="bi bi-pencil-square me-2"></i> Manage Vehicles
+        </a>
+        <a href="{% url 'reports'%}" class="d-block text-white text-decoration-none px-3 py-2">
+            <i class="bi bi-file-earmark-bar-graph me-2"></i> Reports
+        </a>
+        <a href="{% url 'search'%}" class="d-block text-white text-decoration-none px-3 py-2">
+            <i class="bi bi-search me-2"></i> Search
+        </a>
+        <a href="{% url 'account_setting'%}" class="d-block text-white text-decoration-none px-3 py-2">
+            <i class="bi bi-gear me-2"></i> Account Setting
+        </a>
+        <a href="{% url 'home'%}" class="d-block text-white text-decoration-none px-3 py-2">
+            <i class="bi bi-box-arrow-right me-2"></i> Logout
+        </a>
+    </div>
+
+    <div class="col-md-10 content" id="mainContent">
+        <div class="row g-3">
+
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex gap-3">
+                        <i class="bi bi-list-task"></i>
+                        Add Category
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Parking Area Number</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Vehicle Type</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vehicle limit</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Parking Charge</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <button class="btn btn-primary w-100">
+                        Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header d-flex gap-2">
+                        <i class="bi bi-person-arms-up"></i>
+                        Details:
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Car</td>
+                                    <td class="text-end">$ 4.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Motorcycle</td>
+                                    <td class="text-end">$ 2.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Mini Van</td>
+                                    <td class="text-end">$ 5.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Pickup Van</td>
+                                    <td class="text-end">$ 5.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Mini Bus</td>
+                                    <td class="text-end">$ 6.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Car Type 101</td>
+                                    <td class="text-end">$ 7.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid mt-3">
+            <div class="card">
+                <div class="card-header d-flex gap-3">
+                    <i class="bi bi-list-check"></i>
+                    Manage Category
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex align-items-center">
+                            <label for="" class="me-2">Show</label>
+                            <select class="form-select w-auto me-2">
+                                <option>10</option>
+                                <option value="">25</option>
+                                <option value="">50</option>
+                            </select>
+                            <label for="">Entries</label>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <label for="" class="me-2">Search:</label>
+                            <input type="text" class="form-control" name="" id="">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Area Number</th>
+                                <th>Vehicle Type</th>
+                                <th>Vehicle limit</th>
+                                <th>Charge</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>8</td>
+                                <td>7</td>
+                                <td>Pickup Van</td>
+                                <td>11</td>
+                                <td>5.00</td>
+                                <td>
+                                    <span class="badge bg-success rounded-pill px-3">
+                                        Activated
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm mb-1">
+                                        Deactivate
+                                    </button>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>2</td>
+                                <td>Car</td>
+                                <td>18</td>
+                                <td>4.00</td>
+                                <td>
+                                    <span class="badge bg-success rounded-pill px-3">
+                                        Activated
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm mb-1">
+                                        Deactivate
+                                    </button>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>1</td>
+                                <td>Car Type 101</td>
+                                <td>5</td>
+                                <td>7.00</td>
+                                <td>
+                                    <span class="badge bg-success rounded-pill px-3">
+                                        Activated
+                                    </span>
+                                </td>
+                                <td class="d-flex gap-1 justify-content-center">
+                                    <button class="btn btn-danger btn-sm">
+                                        Deactivate
+                                    </button>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>6</td>
+                                <td>MotorCycle</td>
+                                <td>26</td>
+                                <td>2.00</td>
+                                <td>
+                                    <span class="badge bg-success rounded-pill px-3">
+                                        Activated
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm">
+                                        Deactivate
+                                    </button>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>9</td>
+                                <td>Minibus</td>
+                                <td>6</td>
+                                <td>6.00</td>
+                                <td>
+                                    <span class="badge bg-success rounded-pill px-3">
+                                        Activated
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm">
+                                        Deactivate
+                                    </button>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>2</td>
+                                <td>Mini Van</td>
+                                <td>8</td>
+                                <td>5.00</td>
+                                <td>
+                                    <span class="badge bg-success rounded-pill px-3">
+                                        Activated
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm">
+                                        Deactivate
+                                    </button>
+                                    <button class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p>Showing 6 to 12 entries</p>
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a href="{% url 'category'%}" class="page-link">Previous</a>
+                            </li>
+                            <li class="page-item active">
+                                <a href="" class="page-link">2</a>
+                            </li>
+                            <li class="page-item">
+                                <a href="" class="page-link">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<footer class="bg-dark text-white text-center p-3">
+  © 2026 SPMS | All Rights Reserved
+</footer>
+
+</body>
+</html>

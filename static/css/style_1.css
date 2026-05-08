@@ -1,0 +1,40 @@
+
+
+.stat-box{
+    color:whitesmoke;
+    padding:15px;
+    margin-bottom:15px;
+    height:100px;
+}
+.stat-box h3{
+    margin:0;
+    font-size:28px;
+}
+.stat-box p{
+    margin:5px 0 0;
+    font-size:13px;
+}
+.bg1{background:rgb(33, 167, 220);}
+.bg2{background:#343a40;}
+.bg3{background:#dc3545;}
+.bg4{background:#ffc107;}
+.bg5{background:#6c757d;}
+.bg6{background:#007bff;}
+
+.content{
+    padding:20px;
+}
+
+ html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-fluid {
+    flex: 1;
+}
