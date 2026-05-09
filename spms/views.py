@@ -1,4 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
+from spms.forms import LoginForm
+from spms.models import login
+
 def home (request):
     return render(request, 'home.html')
 def dashboard (request):
@@ -17,3 +22,24 @@ def search (request):
     return render(request, 'Search.html')
 def vehicle_entry (request):
     return render(request, 'Vehicle_Entry.html')
+
+def login_page(request):
+    form=LoginForm()
+    if request.method=='POST':
+        form=LoginForm(request.POST)
+        if form.is_valid():
+            username=form.cleaned_data['username']
+            password=form.cleaned_data['password']
+            user=login.objects.filter(
+                username=username,
+                password=password
+            ).exists()
+        if user:
+            return redirect('dashboard')
+        else:
+            messages.error(
+                request,"Invalid Username or Password"
+            )
+    return render(
+        request,'home.html',{'form':form}
+    )

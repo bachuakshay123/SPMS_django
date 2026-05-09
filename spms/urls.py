@@ -2,7 +2,7 @@ from django.urls import path
 from spms import views
 
 urlpatterns=[
-    path('',views.home,name='home'),
+    path('',views.login_page,name='login'),
     path('dashboard/',views.dashboard,name='dashboard'),
     path('account_setting/',views.account_setting,name='account_setting'),
     path('category_2/',views.category_2,name='category_2'),
