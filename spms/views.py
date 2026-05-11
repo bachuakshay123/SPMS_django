@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 from spms.forms import LoginForm
+# from spms.forms import changepasswordForm
 from spms.models import login
 
 def home (request):
@@ -43,3 +44,4 @@ def login_page(request):
     return render(
         request,'home.html',{'form':form}
     )
+

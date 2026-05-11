@@ -20,3 +20,29 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model=login
         fields="__all__"
+
+# class changepasswordForm(forms.ModelForm):
+#     current_password=forms.CharField(
+#         widget=forms.PasswordInput(
+#             attrs={
+#                 'class':'form-control',
+#                 'placeholder':'Current password'
+#             }
+#         )
+#     )
+#     new_password=forms.CharField(
+#         widget=forms.PasswordInput(
+#             attrs={
+#                 'class':'form-control',
+#                 'placeholder':'New Password'
+#             }
+#         )
+#     )
+#     confirm_password=forms.CharField(
+#         widget=forms.PasswordInput(
+#             attrs={
+#                 'class':'form-control',
+#                 'placeholder':'Re-enter Password'
+#             }
+#         )
+#     )
