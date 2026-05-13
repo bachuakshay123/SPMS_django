@@ -92,21 +92,33 @@ function toggleSidebar() {
                     </div>
                     <div class="card-body">
                         <form method="POST">
+                            {% csrf_token %}
+                            {% for message in messages %}
+                            <div class="alert alert-info">
+                                {{ message }}
+                            </div>
+                            {% endfor %}
                             <div class="mb-3">
-                                <label class="form-label">Current Password</label>
-                                <input type="password" class="form-control" placeholder="Current Password">
+                                <label class="form-label">
+                                    Current Password
+                                </label>
+                                {{ form.current_password }}
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">New Password</label>
-                                <input type="password" class="form-control" placeholder="New Password">
+                                <label class="form-label">
+                                    New Password
+                                </label>
+                                {{ form.new_password }}
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Re-Enter Password</label>
-                                <input type="password" class="form-control" placeholder="Re-enter Password">
+                                <label class="form-label">
+                                    Re-Enter Password
+                                </label>
+                                {{ form.confirm_password }}
                             </div>
                             <div>
-                                <button type="submit" class="btn btn-primary w-100">
-                                Login
+                                <button type="submit"class="btn btn-primary w-100">
+                                    Change Password
                                 </button>
                             </div>
                         </form>

@@ -10,7 +10,7 @@ class LoginForm(forms.ModelForm):
         )
     )
     password=forms.CharField(
-        widget=forms.TextInput(
+        widget=forms.PasswordInput(
             attrs={
                 'class':'form-control',
                 'placeholder':'Password'
@@ -21,28 +21,28 @@ class LoginForm(forms.ModelForm):
         model=login
         fields="__all__"
 
-# class changepasswordForm(forms.ModelForm):
-#     current_password=forms.CharField(
-#         widget=forms.PasswordInput(
-#             attrs={
-#                 'class':'form-control',
-#                 'placeholder':'Current password'
-#             }
-#         )
-#     )
-#     new_password=forms.CharField(
-#         widget=forms.PasswordInput(
-#             attrs={
-#                 'class':'form-control',
-#                 'placeholder':'New Password'
-#             }
-#         )
-#     )
-#     confirm_password=forms.CharField(
-#         widget=forms.PasswordInput(
-#             attrs={
-#                 'class':'form-control',
-#                 'placeholder':'Re-enter Password'
-#             }
-#         )
-#     )
+class ChangePasswordForm(forms.Form):
+    current_password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Current Password'
+            }
+        )
+    )
+    new_password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'New Password'
+            }
+        )
+    )
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Re-enter Password'
+            }
+        )
+    )
