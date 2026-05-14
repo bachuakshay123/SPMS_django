@@ -23,28 +23,37 @@ def vehicle_entry (request):
     return render(request, 'Vehicle_Entry.html')
 
 def login_page(request):
-    form=LoginForm()
-    if request.method=='POST':
-        form=LoginForm(request.POST)
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
         if form.is_valid():
-            username=form.cleaned_data['username']
-            password=form.cleaned_data['password']
-            user=login.objects.filter(
-                username=username,
-                password=password
-            ).exists()
-        if user:
-            return redirect('dashboard')
-        else:
-            messages.error(
-                request,"Invalid Username or Password"
-            )
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            users = login.objects.all()
+            valid_user = None
+            for user in users:
+                if user.username == username and user.password == password:
+                    valid_user = user
+                    break
+            if valid_user:
+                request.session['user_id'] = valid_user.id
+                return redirect('dashboard')
+            else:
+                messages.error(
+                    request,
+                    "Invalid Username or Password"
+                )
     return render(
-        request,'home.html',{'form':form}
+        request,
+        'home.html',
+        {'form': form}
     )
 
 def change_password(request):
     form = ChangePasswordForm()
+    user_id = request.session.get('user_id')
+    if not user_id:
+        return redirect('login')
     if request.method == "POST":
         form = ChangePasswordForm(request.POST)
         if form.is_valid():
@@ -52,9 +61,9 @@ def change_password(request):
             new_password = form.cleaned_data['new_password']
             confirm_password = form.cleaned_data['confirm_password']
             user = login.objects.filter(
-                password=current_password
+                id=user_id
             ).first()
-            if user:
+            if user and user.password == current_password:
                 if new_password == confirm_password:
                     user.password = new_password
                     user.save()
