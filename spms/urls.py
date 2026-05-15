@@ -11,4 +11,7 @@ urlpatterns=[
     path('search/',views.search,name='search'),
     path('vehicle_entry/',views.vehicle_entry,name='vehicle_entry'),
     path('account_setting/',views.change_password,name='account_setting'),
+    path('forgot_password/', views.forgot_password, name='forgot_password'),
+    path('verify_otp/', views.verify_otp, name='verify_otp'),
+    path('reset_password/', views.reset_password, name='reset_password'),
 ]

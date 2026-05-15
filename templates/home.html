@@ -35,12 +35,19 @@
                                      {{form.username}}
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">Mobile Number</label>
+                                     {{form.mobile_number}}
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label">Password</label>
                                      {{form.password}}
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Login</button>
                                 </div>
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#forgotModal">
+                                    Forgot Password?
+                                </a>
                             </form>
                         </div>
                     </div>
@@ -51,5 +58,169 @@
 <footer class="bg-dark text-white text-center p-3">
   © 2026 SPMS | All Rights Reserved
 </footer>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgotModal" tabindex="-1">
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Forgot Password</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <div id="messageBox"class="text-center mb-3 fw-bold">
+
+                </div>
+
+                <!-- Mobile Number -->
+                <div id="mobileDiv">
+
+                    <input type="text"
+                           id="mobile_number"
+                           class="form-control"
+                           placeholder="Enter Mobile Number">
+
+                    <button class="btn btn-primary mt-3 w-100"
+                            onclick="getOTP()">
+                        Get OTP
+                    </button>
+
+                </div>
+
+                <!-- OTP -->
+                <div id="otpDiv" style="display:none;">
+
+                    <input type="text"
+                           id="otp"
+                           class="form-control"
+                           placeholder="Enter 6 Digit OTP">
+
+                    <button class="btn btn-success mt-3 w-100"
+                            onclick="verifyOTP()">
+                        Submit OTP
+                    </button>
+
+                </div>
+
+                <!-- New Password -->
+                <div id="passwordDiv" style="display:none;">
+
+                    <input type="password"
+                           id="new_password"
+                           class="form-control"
+                           placeholder="Enter New Password">
+
+                    <button class="btn btn-danger mt-3 w-100"
+                            onclick="resetPassword()">
+                        Change Password
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<script>
+
+function showMessage(message, color){
+    let box = document.getElementById('messageBox')
+    box.innerHTML = message
+    box.style.color = color
+}
+
+function getOTP(){
+    let mobile_number =
+        document.getElementById('mobile_number').value
+    fetch('/forgot_password/',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/x-www-form-urlencoded',
+            'X-CSRFToken':'{{ csrf_token }}'
+        },
+        body:'mobile_number='+mobile_number
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status == 'success'){
+            showMessage(
+                "OTP Sent Successfully",
+                "green"
+            )
+            document.getElementById('mobileDiv').style.display='none'
+            document.getElementById('otpDiv').style.display='block'
+        }
+        else{
+            showMessage(
+                data.message,
+                "red"
+            )
+        }
+    })
+}
+
+function verifyOTP(){
+    let otp =
+        document.getElementById('otp').value
+    fetch('/verify_otp/',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/x-www-form-urlencoded',
+            'X-CSRFToken':'{{ csrf_token }}'
+        },
+        body:'otp='+otp
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status == 'success'){
+            showMessage(
+                "OTP Verified Successfully",
+                "green"
+            )
+            document.getElementById('otpDiv').style.display='none'
+            document.getElementById('passwordDiv').style.display='block'
+        }
+        else{
+            showMessage(
+                data.message,
+                "red"
+            )
+        }
+    })
+}
+
+function resetPassword(){
+    let new_password =
+        document.getElementById('new_password').value
+    fetch('/reset_password/',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/x-www-form-urlencoded',
+            'X-CSRFToken':'{{ csrf_token }}'
+        },
+        body:'new_password='+new_password
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.status == 'success'){
+            showMessage(
+                "Password Changed Successfully",
+                "green"
+            )
+            setTimeout(() => {
+                location.reload()
+            }, 1500)
+        }
+    })
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
