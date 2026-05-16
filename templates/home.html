@@ -80,7 +80,7 @@
                 <div id="mobileDiv">
 
                     <input type="text"
-                           id="mobile_number"
+                           id="forgot_mobile_number"
                            class="form-control"
                            placeholder="Enter Mobile Number">
 
@@ -137,7 +137,7 @@ function showMessage(message, color){
 
 function getOTP(){
     let mobile_number =
-        document.getElementById('mobile_number').value
+        document.getElementById('forgot_mobile_number').value
     fetch('/forgot_password/',{
         method:'POST',
         headers:{

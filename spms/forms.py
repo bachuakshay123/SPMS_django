@@ -1,6 +1,6 @@
 from django import forms
 from spms.models import login
-class LoginForm(forms.ModelForm):
+class LoginForm(forms.Form):
     username=forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -25,11 +25,9 @@ class LoginForm(forms.ModelForm):
             }
         )
     )
-    class Meta:
-        model=login
-        fields="__all__"
 
 class ChangePasswordForm(forms.Form):
+    
     current_password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
