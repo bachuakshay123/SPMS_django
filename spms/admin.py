@@ -1,3 +1,5 @@
 from django.contrib import admin
-
-# Register your models here.
+from spms.models import login,Category,Vehicle
+admin.site.register(login)
+admin.site.register(Category)
+admin.site.register(Vehicle)
