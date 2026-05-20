@@ -14,4 +14,10 @@ urlpatterns=[
     path('forgot_password/', views.forgot_password, name='forgot_password'),
     path('verify_otp/', views.verify_otp, name='verify_otp'),
     path('reset_password/', views.reset_password, name='reset_password'),
+    path('edit_category/<int:id>/',views.edit_category,name='edit_category'),
+    path('delete_category/<int:id>/',views.delete_category,name='delete_category'),
+    path('vehicle_entry/',views.vehicle_entry,name='vehicle_entry'),
+    path('edit_vehicle/<int:id>/',views.edit_vehicle,name='edit_vehicle'),
+    path('delete_vehicle/<int:id>/',views.delete_vehicle,name='delete_vehicle'),
+    path('get_vehicle_details/',views.get_vehicle_details,name='get_vehicle_details'),
 ]

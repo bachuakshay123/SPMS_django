@@ -11,33 +11,36 @@
                         Add Vehicle
                     </div>
                     <div class="card-body">
+                    <form action="" method="POST">
+                        {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Vehicle Number</label>
-                                <input type="text" class="form-control">
+                                {{ form.vehicle_number }}
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Vehicle Type</label>
-                                <select name="" id="" class="form-select">
+                                <select name="vehicle_type"id="vehicle_type"class="form-select">
                                     <option value="">Select Vehicle Type</option>
+                                    {% for i in form.vehicle_type.field.queryset %}
+                                    <option value="{{ i.id }}">{{ i.vehicle_type }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Parking Area NUmber</label>
-                            <select name="" id="" class="form-select">
-                                <option value="">Select Parking Area NUmber</option>
-                            </select>
+                            <input type="text" name="area_number" id="area_number" class="form-control" readonly>
                         </div>
                         <div class="mb-4">
                             <label class="form-label">Parking Charge</label>
-                            <select name="" id="" class="form-select">
-                                <option value="">Select Parking Charge</option>
-                            </select>
+                            <input type="text" name="parking_charge" id="parking_charge" class="form-control"readonly>
                         </div>
-                        <button class="btn btn-primary w-100">
-                        Submit
+                        <button type="submit"class="btn btn-primary w-100">
+                            Submit
                         </button>
+
+                    </form>
                     </div>
                 </div>
             </div>
@@ -115,22 +118,32 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for i in data %}
                             <tr>
-                                <td>36</td>
-                                <td>GBN-2306</td>
-                                <td>2</td>
-                                <td>2022-07-04 10:43:15</td>
-                                <td>
+                                <td>{{ i.id }}</td>
+                                <td>{{ i.vehicle_number }}</td>
+                                <td>{{ i.area_number }}</td>
+                                <td>{{ i.arrival_time }}</td>
+                                <td>{% if i.parking_status == 'Parked' %}
                                     <span class="badge bg-success rounded-pill px-3">
                                         Parked
                                     </span>
+                                    {% else %}
+                                    <span class="badge bg-danger rounded-pill px-3">
+                                        Leaved
+                                    </span>
+                                    {% endif %}
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm">
-                                        Done
-                                    </button>
+                                    <a href="{% url 'edit_vehicle' i.id %}" class="btn btn-primary btn-sm">
+                                        Edit
+                                    </a>
+                                    <a href="{% url 'delete_vehicle' i.id %}" class="btn btn-danger btn-sm">
+                                        Delete
+                                    </a>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                     </div>
@@ -152,5 +165,25 @@
             </div>
         </div>
 
+
+    <script>
+        document
+        .getElementById('vehicle_type')
+        .addEventListener('change', function(){
+            let vehicle_type_id = this.value
+            fetch(
+                `/get_vehicle_details/?vehicle_type_id=${vehicle_type_id}`
+            )
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById(
+                    'area_number'
+                ).value = data.area_number
+                document.getElementById(
+                    'parking_charge'
+                ).value = data.parking_charge
+            })
+        })
+    </script>
 {% endblock %}
  

@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-
+from django.http import JsonResponse
 from spms.forms import LoginForm
 from spms.forms import ChangePasswordForm
-from spms.models import login
+from spms.forms import CategoryForm
+from spms.forms import VehicleForm
+from spms.models import login, Category, Vehicle
 
 import random
 from django.http import JsonResponse
@@ -148,3 +150,97 @@ def reset_password(request):
     return JsonResponse({
         'status': 'error'
     })
+
+def category(request):
+    form = CategoryForm()
+    data = Category.objects.all()
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('category')
+    return render(
+        request,
+        'Category.html',
+        {
+            'form': form,
+            'data': data
+        }
+    )
+
+def edit_category(request, id):
+    edit_data = Category.objects.get(id=id)
+    form = CategoryForm(instance=edit_data)
+    if request.method == "POST":
+        form = CategoryForm(
+            request.POST,
+            instance=edit_data
+        )
+        if form.is_valid():
+            form.save()
+            return redirect('category')
+    return render(
+        request,
+        'Category.html',
+        {
+            'form': form
+        }
+    )
+
+def delete_category(request, id):
+    data = Category.objects.get(id=id)
+    data.delete()
+    return redirect('category')
+
+def vehicle_entry(request):
+    form = VehicleForm()
+    data = Vehicle.objects.all()
+    if request.method == "POST":
+        form = VehicleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('vehicle_entry')
+    return render(
+        request,
+        'Vehicle_Entry.html',
+        {
+            'form': form,
+            'data': data
+        }
+    )
+
+def edit_vehicle(request, id):
+    edit_data = Vehicle.objects.get(id=id)
+    form = VehicleForm(instance=edit_data)
+    if request.method == "POST":
+        form = VehicleForm(
+            request.POST,
+            instance=edit_data
+        )
+        if form.is_valid():
+            form.save()
+            return redirect('vehicle_entry')
+    return render(
+        request,
+        'Vehicle_Entry.html',
+        {
+            'form': form
+        }
+    )
+
+def delete_vehicle(request, id):
+    data = Vehicle.objects.get(id=id)
+    data.delete()
+    return redirect('vehicle_entry')
+def get_vehicle_details(request):
+    vehicle_type_id = request.GET.get('vehicle_type_id')
+    category = Category.objects.get(
+        id=vehicle_type_id
+    )
+    data = {
+        'area_number':
+        category.parking_area_number,
+        'parking_charge':
+        str(category.parking_charge)
+    }
+    return JsonResponse(data)
