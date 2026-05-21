@@ -21,4 +21,5 @@ urlpatterns=[
     path('get_vehicle_details/',views.get_vehicle_details,name='get_vehicle_details'),
     path('vehicle_done/<int:id>/',views.vehicle_done,name='vehicle_done'),
     path('logout/',views.logout_page,name='logout'),
+    path('category_status/<int:id>/',views.category_status,name='category_status'),
 ]

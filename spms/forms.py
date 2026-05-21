@@ -59,7 +59,12 @@ class ChangePasswordForm(forms.Form):
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = "__all__"
+        fields = [
+            'parking_area_number',
+            'vehicle_type',
+            'vehicle_limit',
+            'parking_charge'
+            ]
 
         widgets = {
 
@@ -137,3 +142,8 @@ class VehicleForm(forms.ModelForm):
             ),
 
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['vehicle_type'].queryset = \
+            Category.objects.filter(status=True)

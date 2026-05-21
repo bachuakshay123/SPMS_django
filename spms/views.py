@@ -252,6 +252,7 @@ def category(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request,"Category Added Successfully")
             return redirect('category')
     return render(
         request,
@@ -272,6 +273,7 @@ def edit_category(request, id):
         )
         if form.is_valid():
             form.save()
+            messages.success(request,"Category Updated Successfully")
             return redirect('category')
     return render(
         request,
@@ -284,6 +286,16 @@ def edit_category(request, id):
 def delete_category(request, id):
     data = Category.objects.get(id=id)
     data.delete()
+    messages.success(request,"Category Deleted Successfully")
+    return redirect('category')
+
+def category_status(request, id):
+    data = Category.objects.get(id=id)
+    if data.status == True:
+        data.status = False
+    else:
+        data.status = True
+    data.save()
     return redirect('category')
 
 def vehicle_entry(request):
@@ -294,7 +306,13 @@ def vehicle_entry(request):
     if request.method == "POST":
         form = VehicleForm(request.POST)
         if form.is_valid():
-            form.save()
+            vehicle = form.save()
+            category = vehicle.vehicle_type
+            total_parked = Vehicle.objects.filter(vehicle_type=category,parking_status='Parked').count()
+            if total_parked >= category.vehicle_limit:
+                category.status = False
+                category.save()
+            messages.success(request,"Vehicle Added Successfully")
             return redirect('vehicle_entry')
     return render(
         request,
@@ -315,6 +333,7 @@ def edit_vehicle(request, id):
         )
         if form.is_valid():
             form.save()
+            messages.success(request,"Vehicle Updated Successfully")
             return redirect('vehicle_entry')
     return render(
         request,
@@ -327,6 +346,7 @@ def edit_vehicle(request, id):
 def delete_vehicle(request, id):
     data = Vehicle.objects.get(id=id)
     data.delete()
+    messages.success(request,"Vehicle Deleted Successfully")
     return redirect('vehicle_entry')
 def get_vehicle_details(request):
     vehicle_type_id = request.GET.get('vehicle_type_id')
@@ -344,9 +364,16 @@ def get_vehicle_details(request):
 def vehicle_done(request, id):
     vehicle = Vehicle.objects.get(id=id)
     vehicle.parking_status = 'Leaved'
+    vehicle.payment_status = 'Paid'
     vehicle.departure_time = timezone.now()
     vehicle.save()
-    return redirect('manage_vehicles')
+    category = vehicle.vehicle_type
+    total_parked = Vehicle.objects.filter(vehicle_type=category,parking_status='Parked').count()
+    if total_parked < category.vehicle_limit:
+        category.status = True
+        category.save()
+        messages.success(request,"Vehicle Exited Successfully")
+        return redirect('manage_vehicles')
 
 def manage_vehicles(request):
     if 'user_id' not in request.session:

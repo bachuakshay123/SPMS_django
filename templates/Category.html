@@ -11,27 +11,34 @@
                         Add Category
                     </div>
                     <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Parking Area Number</label>
-                                <input type="text" class="form-control">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">
+                                        Parking Area Number
+                                    </label>
+                                    {{ form.parking_area_number }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Vehicle Type</label>
+                                    {{ form.vehicle_type }}
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Vehicle Type</label>
-                                <input type="text" class="form-control">
+                            <div class="mb-3">
+                                <label class="form-label">Vehicle limit</label>
+                                {{ form.vehicle_limit }}
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Vehicle limit</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <div class="mb-4">
-                            <label class="form-label">Parking Charge</label>
-                            <input type="text" class="form-control">
-                        </div>
-                        <button class="btn btn-primary w-100">
-                        Submit
-                        </button>
+                            <div class="mb-4">
+                                <label class="form-label">
+                                    Parking Charge
+                                </label>
+                                {{ form.parking_charge }}
+                            </div>
+                            <button type="submit"class="btn btn-primary w-100">
+                                Submit
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -131,12 +138,21 @@
                                     {% endif %}
                                 </td>
                                 <td class="d-flex gap-1 justify-content-center">
-                                    <a href="{% url 'edit_category' i.id %}"class="btn btn-primary btn-sm">
+                                    <a href="{% url 'edit_category' i.id %}" class="btn btn-primary btn-sm">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
-                                    <a href="{% url 'delete_category' i.id %}"class="btn btn-danger btn-sm">
+                                    <a href="{% url 'delete_category' i.id %}" class="btn btn-danger btn-sm">
                                         <i class="bi bi-trash3"></i>
                                     </a>
+                                    {% if i.status %}
+                                    <a href="{% url 'category_status' i.id %}" class="btn btn-warning btn-sm">
+                                        Deactivate
+                                    </a>
+                                    {% else %}
+                                    <a href="{% url 'category_status' i.id %}" class="btn btn-success btn-sm">
+                                        Activate
+                                    </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                             {% endfor %}
