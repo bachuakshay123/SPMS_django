@@ -8,7 +8,7 @@
                 <div class="card bg-primary text-white">
                     <div class="card-body">
                         <h5>Total Vehicles</h5>
-                        <h3>25</h3>
+                        <h3>{{ total_vehicles }}</h3>
                     </div>
                 </div>
             </div>
@@ -16,7 +16,7 @@
                 <div class="card bg-success text-white">
                     <div class="card-body">
                         <h5>Total Revenue</h5>
-                        <h3>$150</h3>
+                        <h3>{{ total_revenue }}</h3>
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                 <div class="card bg-warning text-dark">
                     <div class="card-body">
                         <h5>Wrong Parking</h5>
-                        <h3>3</h3>
+                        <h3>{{ wrong_parking }}</h3>
                     </div>
                 </div>
             </div>
@@ -32,7 +32,7 @@
                 <div class="card bg-danger text-white">
                     <div class="card-body">
                         <h5>Pending Payments</h5>
-                        <h3>5</h3>
+                        <h3>{{ pending_payments }}</h3>
                     </div>
                 </div>
             </div>
@@ -44,36 +44,47 @@
                 <small>Filter records by date range</small>
             </div>
             <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
                 <div class="row mb-4">
                     <div class="col-md-3 mb-2">
                         <label>From Date</label>
-                        <input type="date" class="form-control">
+                        <input type="date"name="from_date"class="form-control">
                     </div>
                     <div class="col-md-3 mb-2">
                         <label>To Date</label>
-                        <input type="date" class="form-control">
+                        <input type="date"name="to_date"class="form-control">
                     </div>
                     <div class="col-md-3 mb-2">
                         <label>Vehicle Type</label>
-                        <select class="form-control">
-                            <option>All</option>
+                        <select name="vehicle_type"class="form-control">
+                            <option value="">All</option>
+                            {% for i in category %}
+                            <option value="{{ i.id }}">
+                                {{ i.vehicle_type }}
+                            </option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-3 d-flex align-items-end mb-2">
-                        <button class="btn btn-secondary w-100">Generate</button>
+                        <button type="submit"class="btn btn-secondary w-100">Generate</button>
                     </div>
                 </div>
+                </form>
                 
 
                 <div class="card-body">
-                    <div class="row">
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Enter Vehicle Number">
-                            <button class="btn btn-secondary" type="button">
-                                <i class="bi bi-search"></i>
-                            </button>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="input-group">
+                                <input type="text" name="vehicle_number" class="form-control" placeholder="Enter Vehicle Number">
+                                <button class="btn btn-secondary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
 
                 <div class="table-responsive">
@@ -92,28 +103,33 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for i in data %}
                             <tr>
-                                <td>1</td>
-                                <td>GBN-2306</td>
-                                <td>Car Type 101</td>
-                                <td>1</td>
-                                <td>$7</td>
-                                <td><span class="badge bg-success">Paid</span></td>
-                                <td><span class="badge bg-warning text-dark">Wrong Parking</span></td>
-                                <td>2022-07-04 09:29:13</td>
-                                <td>2022-07-04 11:24:26/td>
+                                <td>{{ i.id }}</td>
+                                <td>{{ i.vehicle_number }}</td>
+                                <td>{{ i.vehicle_type }}</td>
+                                <td>{{ i.area_number }}</td>
+                                <td>{{ i.parking_charge }}</td>
+                                <td>
+                                    {% if i.payment_status == 'Paid' %}
+                                    <span class="badge bg-success">Paid</span>
+                                    {% else %}
+                                    <span class="badge bg-danger">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if i.wrong_parking %}
+                                    <span class="badge bg-warning text-dark">Wrong Parking</span>
+                                    {% else %}
+                                    <span class="badge bg-primary">
+                                        {{ i.parking_status }}
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ i.arrival_time }}</td>
+                                <td>{{ i.departure_time }}</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>ABC-4321</td>
-                                <td>Minibus</td>
-                                <td>9</td>
-                                <td>$6</td>
-                                <td><span class="badge bg-danger">Pending</span></td>
-                                <td><span class="badge bg-primary">Parked</span></td>
-                                <td>2022-07-04 14:09:14</td>
-                                <td>-</td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>

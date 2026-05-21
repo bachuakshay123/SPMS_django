@@ -38,96 +38,40 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for i in data %}
                             <tr>
-                                <td>34</td>
-                                <td>GBN-2306</td>
-                                <td>Car Type 101</td>
-                                <td>1</td>
-                                <td>$ 7.00</td>
-                                <td>2022-07-04 09:29:13</td>
+                                <td>{{ i.id }}</td>
+                                <td>{{ i.vehicle_number }}</td>
+                                <td>{{ i.vehicle_type }}</td>
+                                <td>{{ i.area_number }}</td>
+                                <td>{{ i.parking_charge }}</td>
+                                <td>{{ i.arrival_time }}</td>
                                 <td>
-                                    <span class="badge bg-success rounded-pill px-3">
-                                        leaved
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm">
-                                        Receipt
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>35</td>
-                                <td>ABC-1234</td>
-                                <td>Car Type 101</td>
-                                <td>1</td>
-                                <td>$ 7.00</td>
-                                <td>2022-07-04 09:29:47</td>
-                                <td>
-                                    <span class="badge bg-success rounded-pill px-3">
-                                        leaved
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm">
-                                        Receipt
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>36</td>
-                                <td>GBN-2306</td>
-                                <td>Car</td>
-                                <td>2</td>
-                                <td>$ 4.00</td>
-                                <td>2022-07-04 10:43:15</td>
-                                <td>
+                                    {% if i.parking_status == 'Parked' %}
                                     <span class="badge bg-primary rounded-pill px-3">
-                                        parked
+                                        Parked
                                     </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm">
-                                        Receipt
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>37</td>
-                                <td>CDM-1014</td>
-                                <td>Category 102</td>
-                                <td>2</td>
-                                <td>$ 50.00</td>
-                                <td>2022-07-04 14:08:26</td>
-                                <td>
+                                    {% else %}
                                     <span class="badge bg-success rounded-pill px-3">
-                                        leaved
+                                        Leaved
                                     </span>
+                                    {% endif %}
                                 </td>
-                                <td>
-                                    <button class="btn btn-sm">
-                                        Receipt
-                                    </button>
+                                <td class="d-flex gap-1 justify-content-center">
+                                    {% if i.parking_status == 'Parked' %}
+                                    <a href="{% url 'vehicle_done' i.id %}"class="btn btn-success btn-sm">
+                                        Done
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'edit_vehicle' i.id %}"class="btn btn-primary btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="{% url 'delete_vehicle' i.id %}"class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash3"></i>
+                                    </a>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>38</td>
-                                <td>ABC-4321</td>
-                                <td>Minibus</td>
-                                <td>9</td>
-                                <td>$ 6.00</td>
-                                <td>2022-07-04 14:09:14</td>
-                                <td>
-                                    <span class="badge bg-success rounded-pill px-3">
-                                        leaved
-                                    </span>
-                                </td>
-                                <td>
-                                    <button class="btn btn-sm">
-                                        Receipt
-                                    </button>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                     </div>

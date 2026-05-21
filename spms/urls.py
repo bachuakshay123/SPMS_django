@@ -4,7 +4,6 @@ from spms import views
 urlpatterns=[
     path('',views.login_page,name='login'),
     path('dashboard/',views.dashboard,name='dashboard'),
-    path('category_2/',views.category_2,name='category_2'),
     path('category/',views.category,name='category'),
     path('manage_vehicles/',views.manage_vehicles,name='manage_vehicles'),
     path('reports/',views.reports,name='reports'),
@@ -20,4 +19,6 @@ urlpatterns=[
     path('edit_vehicle/<int:id>/',views.edit_vehicle,name='edit_vehicle'),
     path('delete_vehicle/<int:id>/',views.delete_vehicle,name='delete_vehicle'),
     path('get_vehicle_details/',views.get_vehicle_details,name='get_vehicle_details'),
+    path('vehicle_done/<int:id>/',views.vehicle_done,name='vehicle_done'),
+    path('logout/',views.logout_page,name='logout'),
 ]

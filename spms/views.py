@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
+from django.utils import timezone
+
 from spms.forms import LoginForm
 from spms.forms import ChangePasswordForm
 from spms.forms import CategoryForm
@@ -12,20 +14,108 @@ from django.http import JsonResponse
 
 def home (request):
     return render(request, 'home.html')
-def dashboard (request):
-    return render(request, 'dashboard.html')
-def category_2 (request):
-    return render(request, 'Category_2.html')
-def category (request):
-    return render(request, 'Category.html')
-def manage_vehicles(request):
-    return render(request, 'manage_vehicles.html')
-def reports (request):
-    return render(request, 'reports.html')
-def search (request):
-    return render(request, 'Search.html')
-def vehicle_entry (request):
-    return render(request, 'Vehicle_Entry.html')
+
+def dashboard(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    parked_vehicles = Vehicle.objects.filter(
+        parking_status='Parked'
+    ).count()
+    departed_vehicles = Vehicle.objects.filter(
+        parking_status='Leaved'
+    ).count()
+    total_category = Category.objects.count()
+    total_records = Vehicle.objects.count()
+    total_earnings = 0
+    paid_vehicles = Vehicle.objects.filter(
+        payment_status='Paid'
+    )
+    for i in paid_vehicles:
+        total_earnings += i.parking_charge
+    total_slots = 0
+    categories = Category.objects.all()
+    for i in categories:
+        total_slots += i.vehicle_limit
+    return render(
+        request,
+        'dashboard.html',
+        {
+            'parked_vehicles': parked_vehicles,
+            'departed_vehicles': departed_vehicles,
+            'total_category': total_category,
+            'total_earnings': total_earnings,
+            'total_records': total_records,
+            'total_slots': total_slots
+        }
+    )
+
+def reports(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    data = Vehicle.objects.all()
+    category = Category.objects.all()
+    if request.method == "POST":
+        from_date = request.POST.get('from_date')
+        to_date = request.POST.get('to_date')
+        vehicle_type = request.POST.get('vehicle_type')
+        vehicle_number = request.POST.get('vehicle_number')
+        if vehicle_number:
+            data = data.filter(
+                vehicle_number__icontains=vehicle_number
+                )
+        if from_date and to_date:
+            data = data.filter(
+                arrival_time__date__range=[
+                    from_date,
+                    to_date
+                ]
+            )
+        if vehicle_type and vehicle_type != "All":
+            data = data.filter(
+                vehicle_type__id=vehicle_type
+            )
+    total_vehicles = data.count()
+    total_revenue = 0
+    wrong_parking = data.filter(
+        wrong_parking=True
+    ).count()
+    pending_payments = data.filter(
+        payment_status='Pending'
+    ).count()
+    for i in data:
+        total_revenue += i.parking_charge
+    return render(
+        request,
+        'reports.html',
+        {
+            'data': data,
+            'category': category,
+            'total_vehicles': total_vehicles,
+            'total_revenue': total_revenue,
+            'wrong_parking': wrong_parking,
+            'pending_payments': pending_payments
+        }
+    )
+
+def search(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    data = None
+    query = ""
+    if request.method == "POST":
+        query = request.POST.get('search')
+        data = Vehicle.objects.filter(
+            vehicle_number__icontains=query
+        )
+    return render(
+        request,
+        'Search.html',
+        {
+            'data': data,
+            'query': query
+        }
+    )
+
 
 def login_page(request):
     form = LoginForm()
@@ -56,6 +146,8 @@ def login_page(request):
     )
 
 def change_password(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
     form = ChangePasswordForm()
     user_id = request.session.get('user_id')
     if not user_id:
@@ -152,6 +244,8 @@ def reset_password(request):
     })
 
 def category(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
     form = CategoryForm()
     data = Category.objects.all()
     if request.method == "POST":
@@ -193,6 +287,8 @@ def delete_category(request, id):
     return redirect('category')
 
 def vehicle_entry(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
     form = VehicleForm()
     data = Vehicle.objects.all()
     if request.method == "POST":
@@ -244,3 +340,27 @@ def get_vehicle_details(request):
         str(category.parking_charge)
     }
     return JsonResponse(data)
+
+def vehicle_done(request, id):
+    vehicle = Vehicle.objects.get(id=id)
+    vehicle.parking_status = 'Leaved'
+    vehicle.departure_time = timezone.now()
+    vehicle.save()
+    return redirect('manage_vehicles')
+
+def manage_vehicles(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    data = Vehicle.objects.all()
+    return render(
+        request,
+        'manage_vehicles.html',
+        {
+            'data': data
+        }
+    )
+
+def logout_page(request):
+    request.session.flush()
+    return redirect('login')
+

@@ -13,14 +13,59 @@
                     </div>
                     <div class="card-body">
                         <div class="col-md-6 offset-3 mt-5">
-                        <div class="input-group">
-                            <input type="text" class="form-control">
-                            <button class="btn btn-secondary" type="button">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="input-group">
+                                <input type="text"name="search"class="form-control"placeholder="Enter Vehicle Number">
+                                <button class="btn btn-secondary"type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
                         </div>
                     </div>
+                    {% if data %}
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered text-center">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Vehicle Number</th>
+                                    <th>Vehicle Type</th>
+                                    <th>Area Number</th>
+                                    <th>Charge</th>
+                                    <th>Status</th>
+                                    <th>Arrival Time</th>
+                                    <th>Departure Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in data %}
+                                <tr>
+                                    <td>{{ i.id }}</td>
+                                    <td>{{ i.vehicle_number }}</td>
+                                    <td>{{ i.vehicle_type }}</td>
+                                    <td>{{ i.area_number }}</td>
+                                    <td>{{ i.parking_charge }}</td>
+                                    <td>
+                                        {% if i.parking_status == 'Parked' %}
+                                        <span class="badge bg-success">
+                                            Parked
+                                        </span>
+                                        {% else %}
+                                        <span class="badge bg-danger">
+                                            Leaved
+                                        </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ i.arrival_time }}</td>
+                                    <td>{{ i.departure_time }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
