@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 from spms.forms import LoginForm
 from spms.forms import ChangePasswordForm
@@ -84,6 +85,9 @@ def reports(request):
     ).count()
     for i in data:
         total_revenue += i.parking_charge
+    paginator = Paginator(data, 10)
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
     return render(
         request,
         'reports.html',
@@ -100,16 +104,16 @@ def reports(request):
 def search(request):
     if 'user_id' not in request.session:
         return redirect('login')
-    data = None
-    query = ""
-    if request.method == "POST":
-        query = request.POST.get('search')
-        data = Vehicle.objects.filter(
+    query = request.GET.get('search')
+    vehicle_data = Vehicle.objects.all()
+    if query:
+        vehicle_data = vehicle_data.filter(
             vehicle_number__icontains=query
         )
-    return render(
-        request,
-        'Search.html',
+    paginator = Paginator(vehicle_data, 10)
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
+    return render( request, 'Search.html',
         {
             'data': data,
             'query': query
@@ -247,7 +251,15 @@ def category(request):
     if 'user_id' not in request.session:
         return redirect('login')
     form = CategoryForm()
-    data = Category.objects.all()
+    category_data = Category.objects.all()
+    search = request.GET.get('search')
+    if search:
+        category_data = category_data.filter(
+            vehicle_type__icontains=search
+            )
+    paginator = Paginator(category_data, 10)
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
     if request.method == "POST":
         form = CategoryForm(request.POST)
         if form.is_valid():
@@ -302,7 +314,27 @@ def vehicle_entry(request):
     if 'user_id' not in request.session:
         return redirect('login')
     form = VehicleForm()
-    data = Vehicle.objects.all()
+    vehicle_data = Vehicle.objects.all()
+    search = request.GET.get('search')
+    if search:
+        vehicle_data = vehicle_data.filter(
+            vehicle_number__icontains=search
+            )
+    paginator = Paginator(vehicle_data, 5)
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
+    limitations = []
+    categories = Category.objects.all()
+    for i in categories:
+        parked = Vehicle.objects.filter(
+            vehicle_type=i,
+            parking_status='Parked'
+            ).count()
+        limitations.append({
+            'vehicle_type': i.vehicle_type,
+            'parked': parked,
+            'limit': i.vehicle_limit
+            })
     if request.method == "POST":
         form = VehicleForm(request.POST)
         if form.is_valid():
@@ -319,7 +351,8 @@ def vehicle_entry(request):
         'Vehicle_Entry.html',
         {
             'form': form,
-            'data': data
+            'data': data,
+            'limitations': limitations
         }
     )
 
@@ -348,6 +381,7 @@ def delete_vehicle(request, id):
     data.delete()
     messages.success(request,"Vehicle Deleted Successfully")
     return redirect('vehicle_entry')
+
 def get_vehicle_details(request):
     vehicle_type_id = request.GET.get('vehicle_type_id')
     category = Category.objects.get(
@@ -378,7 +412,15 @@ def vehicle_done(request, id):
 def manage_vehicles(request):
     if 'user_id' not in request.session:
         return redirect('login')
-    data = Vehicle.objects.all()
+    vehicle_data = Vehicle.objects.all()
+    search = request.GET.get('search')
+    if search:
+        vehicle_data = vehicle_data.filter(
+            vehicle_number__icontains=search
+            )
+    paginator = Paginator(vehicle_data, 10)
+    page_number = request.GET.get('page')
+    data = paginator.get_page(page_number)
     return render(
         request,
         'manage_vehicles.html',

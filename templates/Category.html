@@ -52,30 +52,16 @@
                     <div class="card-body">
                         <table class="table table-bordered">
                             <tbody>
+                                {% for i in data %}
                                 <tr>
-                                    <td>Car</td>
-                                    <td class="text-end">$ 4.00</td>
+                                    <td>
+                                        {{ i.vehicle_type }}
+                                    </td>
+                                    <td class="text-end">
+                                        {{ i.parking_charge }}
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td>Motorcycle</td>
-                                    <td class="text-end">$ 2.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Mini Van</td>
-                                    <td class="text-end">$ 5.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Pickup Van</td>
-                                    <td class="text-end">$ 5.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Mini Bus</td>
-                                    <td class="text-end">$ 6.00</td>
-                                </tr>
-                                <tr>
-                                    <td>Car Type 101</td>
-                                    <td class="text-end">$ 7.00</td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -91,18 +77,12 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="d-flex align-items-center">
-                            <label for="" class="me-2">Show</label>
-                            <select class="form-select w-auto me-2">
-                                <option>10</option>
-                                <option value="">25</option>
-                                <option value="">50</option>
-                            </select>
-                            <label for="">Entries</label>
-                        </div>
+                        <div></div>
                         <div class="d-flex align-items-center">
                             <label for="" class="me-2">Search:</label>
-                            <input type="text" class="form-control" name="" id="">
+                            <form method="GET">
+                                <input type="text" class="form-control" name="search" value="{{ request.GET.search }}">
+                            </form>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -160,17 +140,32 @@
                     </table>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <p>Showing 1 to 6 entries</p>
+                        <p>
+                            Showing page {{ data.number }}
+                            of {{ data.paginator.num_pages }}
+                        </p>
                         <ul class="pagination">
+                            {% if data.has_previous %}
                             <li class="page-item">
-                                <a href="" class="page-link">Previous</a>
+                                <a href="?page={{ data.previous_page_number }}" class="page-link">
+                                    Previous
+                                </a>
                             </li>
-                            <li class="page-item active">
-                                <a href="" class="page-link">1</a>
+                            {% endif %}
+                            {% for num in data.paginator.page_range %}
+                            <li class="page-item {% if data.number == num %}active{% endif %}">
+                                <a href="?page={{ num }}" class="page-link">
+                                    {{ num }}
+                                </a>
                             </li>
+                            {% endfor %}
+                            {% if data.has_next %}
                             <li class="page-item">
-                                <a href="#" class="page-link">Next</a>
+                                <a href="?page={{ data.next_page_number }}" class="page-link">
+                                    Next
+                                </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>

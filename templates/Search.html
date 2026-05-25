@@ -13,7 +13,7 @@
                     </div>
                     <div class="card-body">
                         <div class="col-md-6 offset-3 mt-5">
-                        <form method="POST">
+                        <form method="GET">
                             {% csrf_token %}
                             <div class="input-group">
                                 <input type="text"name="search"class="form-control"placeholder="Enter Vehicle Number">
@@ -66,9 +66,35 @@
                         </table>
                     </div>
                     {% endif %}
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <p> Showing page {{ data.number }} of {{ data.paginator.num_pages }} </p>
+                        <ul class="pagination">
+                            {% if data.has_previous %}
+                            <li class="page-item">
+                                <a href="?page={{ data.previous_page_number }}&search={{ query }}" class="page-link">
+                                    Previous
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for num in data.paginator.page_range %}
+                            <li class="page-item {% if data.number == num %}active{% endif %}">
+                                <a href="?page={{ num }}&search={{ query }}" class="page-link">
+                                    {{ num }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                            {% if data.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{ data.next_page_number }}&search={{ query }}" class="page-link">
+                                    Next
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-
 {% endblock %}
  

@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Parking Area NUmber</label>
+                            <label class="form-label">Parking Area Number</label>
                             <input type="text" name="area_number" id="area_number" class="form-control" readonly>
                         </div>
                         <div class="mb-4">
@@ -54,30 +54,16 @@
                     <div class="card-body">
                         <table class="table table-bordered">
                             <tbody>
+                                {% for i in limitations %}
                                 <tr>
-                                    <td>Car Limit:</td>
-                                    <td class="text-end">17 out of 18</td>
+                                    <td>
+                                        {{ i.vehicle_type }} Limit:
+                                    </td>
+                                    <td class="text-end">
+                                        {{ i.parked }} out of {{ i.limit }}
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td>Motorcycle Limit:</td>
-                                    <td class="text-end">26 out of 26</td>
-                                </tr>
-                                <tr>
-                                    <td>Mini Van Limit:</td>
-                                    <td class="text-end">8 out of 8</td>
-                                </tr>
-                                <tr>
-                                    <td>Pickup Van Limit:</td>
-                                    <td class="text-end">11 out of 11</td>
-                                </tr>
-                                <tr>
-                                    <td>Mini Bus Limit:</td>
-                                    <td class="text-end">6 out of 6</td>
-                                </tr>
-                                <tr>
-                                    <td>Car Type 101 Limit:</td>
-                                    <td class="text-end">5 out of 5</td>
-                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -89,20 +75,16 @@
             <div class="card">
                 <div class="card-header d-flex gap-3">
                     <i class="bi bi-list-check"></i>
-                    Manage Category
+                    Manage Vehicle
                 </div>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="d-flex align-items-center mb-3">
-                            <label for="" class="me-2">Show</label>
-                            <select class="form-select w-auto me-2">
-                                <option>10</option>
-                            </select>
-                            <label for="">Entries</label>
-                        </div>
+                        <div></div>
                         <div class="d-flex align-items-center">
                             <label for="" class="me-2">Search:</label>
-                            <input type="text" class="form-control" name="" id="">
+                            <form method="GET">
+                                <input type="text" class="form-control" name="search" value="{{ request.GET.search }}">
+                            </form>
                         </div>
                     </div>
                     <div class="table-responsive">
@@ -148,17 +130,32 @@
                     </table>
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <p>Showing 1 to 6 entries</p>
+                        <p>
+                            Showing page {{ data.number }}
+                            of {{ data.paginator.num_pages }}
+                        </p>
                         <ul class="pagination">
+                            {% if data.has_previous %}
                             <li class="page-item">
-                                <a href="" class="page-link">Previous</a>
+                                <a href="?page={{ data.previous_page_number }}" class="page-link">
+                                    Previous
+                                </a>
                             </li>
-                            <li class="page-item active">
-                                <a href="" class="page-link">1</a>
+                            {% endif %}
+                            {% for num in data.paginator.page_range %}
+                            <li class="page-item {% if data.number == num %}active{% endif %}">
+                                <a href="?page={{ num }}" class="page-link">
+                                    {{ num }}
+                                </a>
                             </li>
+                            {% endfor %}
+                            {% if data.has_next %}
                             <li class="page-item">
-                                <a href="" class="page-link">Next</a>
+                                <a href="?page={{ data.next_page_number }}" class="page-link">
+                                    Next
+                                </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
