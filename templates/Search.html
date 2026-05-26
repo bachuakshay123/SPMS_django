@@ -16,8 +16,8 @@
                         <form method="GET">
                             {% csrf_token %}
                             <div class="input-group">
-                                <input type="text"name="search"class="form-control"placeholder="Enter Vehicle Number">
-                                <button class="btn btn-secondary"type="submit">
+                                <input type="text" id="searchInput" class="form-control" placeholder="Search Vehicle / Area / Type">
+                                <button class="btn btn-secondary">
                                     <i class="bi bi-search"></i>
                                 </button>
                             </div>
@@ -39,7 +39,7 @@
                                     <th>Departure Time</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tableBody">
                                 {% for i in data %}
                                 <tr>
                                     <td>{{ i.id }}</td>
@@ -67,6 +67,7 @@
                     </div>
                     {% endif %}
 
+                    {% if data.paginator.num_pages > 1 %}
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <p> Showing page {{ data.number }} of {{ data.paginator.num_pages }} </p>
                         <ul class="pagination">
@@ -93,6 +94,7 @@
                             {% endif %}
                         </ul>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

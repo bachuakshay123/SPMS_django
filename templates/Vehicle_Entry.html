@@ -82,8 +82,8 @@
                         <div></div>
                         <div class="d-flex align-items-center">
                             <label for="" class="me-2">Search:</label>
-                            <form method="GET">
-                                <input type="text" class="form-control" name="search" value="{{ request.GET.search }}">
+                            <form method="GET" id="searchForm">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search">
                             </form>
                         </div>
                     </div>
@@ -93,17 +93,19 @@
                             <tr>
                                 <th>#</th>
                                 <th>Vehicle Number</th>
+                                <th>Vehicle Type</th>
                                 <th>Area Number</th>
                                 <th>Arrival_Time</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             {% for i in data %}
                             <tr>
                                 <td>{{ i.id }}</td>
                                 <td>{{ i.vehicle_number }}</td>
+                                <td>{{ i.vehicle_type }}</td>
                                 <td>{{ i.area_number }}</td>
                                 <td>{{ i.arrival_time }}</td>
                                 <td>{% if i.parking_status == 'Parked' %}
@@ -129,6 +131,7 @@
                         </tbody>
                     </table>
                     </div>
+                    {% if data.paginator.num_pages > 1 %}
                     <div class="d-flex justify-content-between align-items-center">
                         <p>
                             Showing page {{ data.number }}
@@ -158,6 +161,7 @@
                             {% endif %}
                         </ul>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

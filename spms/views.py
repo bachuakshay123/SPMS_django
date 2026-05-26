@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.db.models import Q
 
 from spms.forms import LoginForm
 from spms.forms import ChangePasswordForm
@@ -108,7 +109,9 @@ def search(request):
     vehicle_data = Vehicle.objects.all()
     if query:
         vehicle_data = vehicle_data.filter(
-            vehicle_number__icontains=query
+            Q( vehicle_number__icontains=query) |
+            Q( vehicle_type__vehicle_type__icontains=query ) |
+            Q( area_number__icontains=query )
         )
     paginator = Paginator(vehicle_data, 10)
     page_number = request.GET.get('page')
@@ -255,7 +258,8 @@ def category(request):
     search = request.GET.get('search')
     if search:
         category_data = category_data.filter(
-            vehicle_type__icontains=search
+            Q( vehicle_type__icontains=search ) |
+            Q( parking_area_number__icontains=search )
             )
     paginator = Paginator(category_data, 10)
     page_number = request.GET.get('page')
@@ -318,9 +322,11 @@ def vehicle_entry(request):
     search = request.GET.get('search')
     if search:
         vehicle_data = vehicle_data.filter(
-            vehicle_number__icontains=search
+            Q( vehicle_number__icontains=search) |
+            Q( vehicle_type__vehicle_type__icontains=search ) |
+            Q( area_number__icontains=search )
             )
-    paginator = Paginator(vehicle_data, 5)
+    paginator = Paginator(vehicle_data, 10)
     page_number = request.GET.get('page')
     data = paginator.get_page(page_number)
     limitations = []
@@ -415,9 +421,15 @@ def manage_vehicles(request):
     vehicle_data = Vehicle.objects.all()
     search = request.GET.get('search')
     if search:
-        vehicle_data = vehicle_data.filter(
-            vehicle_number__icontains=search
-            )
+        if search.isdigit():
+            vehicle_data = vehicle_data.filter(
+                area_number=int(search)
+                )
+        else:
+            vehicle_data = vehicle_data.filter(
+                Q(vehicle_number__icontains=search) |
+                Q(vehicle_type__vehicle_type__icontains=search)
+                )
     paginator = Paginator(vehicle_data, 10)
     page_number = request.GET.get('page')
     data = paginator.get_page(page_number)
